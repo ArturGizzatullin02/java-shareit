@@ -53,8 +53,7 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
-    public Item update(@RequestHeader(name = "X-Sharer-User-Id") int userId, @PathVariable(name = "itemId") int itemId
-            , @Validated @RequestBody ItemUpdateDto item) {
+    public Item update(@RequestHeader(name = "X-Sharer-User-Id") int userId, @PathVariable(name = "itemId") int itemId, @Validated @RequestBody ItemUpdateDto item) {
         log.info("[ITEM Controller] Starting updating item {} for user with id {}", item, userId);
         Item result = itemService.update(userId, item, itemId);
         log.info("[ITEM Controller] Item {} for user with id {} updated", result.getId(), userId);
@@ -62,8 +61,7 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public Collection<Item> search(@RequestHeader("X-Sharer-User-Id") int userId
-            , @RequestParam(name = "text") String text) {
+    public Collection<Item> search(@RequestHeader("X-Sharer-User-Id") int userId, @RequestParam(name = "text") String text) {
         log.info("[ITEM Controller] Searching items with text {} in name or description", text);
         Collection<Item> result = itemService.search(text);
         log.info("[ITEM Controller] Searching items with text {} finished", text);

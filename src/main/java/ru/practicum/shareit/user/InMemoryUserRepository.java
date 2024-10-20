@@ -41,8 +41,8 @@ public class InMemoryUserRepository implements UserRepository {
         String userEmail = user.getEmail();
         String userName = user.getName();
         if (userEmail != null) {
-            emails.stream().
-                    filter(e -> e.equals(userInMap.getEmail()))
+            emails.stream()
+                    .filter(e -> e.equals(userInMap.getEmail()))
                     .findFirst()
                     .ifPresent(emails::remove);
             userInMap.setEmail(userEmail);

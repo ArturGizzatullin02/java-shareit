@@ -36,8 +36,8 @@ public class ItemServiceImpl implements ItemService {
         log.info("[ITEM Service] Starting updating item {} for user with id {}", item, userId);
         Item itemForUpdate = mapper.map(item, Item.class);
         Item itemFromRepository = repository.get(itemId)
-                .orElseThrow(() -> new ItemNotFoundException(String.format("Item with id %d not found"
-                        , itemForUpdate.getId())));
+                .orElseThrow(() -> new ItemNotFoundException(String.format("Item with id %d not found",
+                        itemForUpdate.getId())));
         User userFromRepository = userRepository.getById(userId)
                 .orElseThrow(() -> new UserNotFoundException(String.format("User with id %d not found", userId)));
         if (!itemFromRepository.getOwner().equals(userFromRepository)) {
