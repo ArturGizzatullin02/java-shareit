@@ -1,25 +1,24 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.dto;
 
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Getter
 @Setter
 @EqualsAndHashCode
 @ToString
 @Builder
-@NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
-public class User {
-    private Integer id;
+public class UserUpdateDto {
     private String name;
+
+    @Email(message = "Некорректный email")
     private String email;
 }

@@ -1,17 +1,16 @@
-package ru.practicum.shareit.request;
+package ru.practicum.shareit.item.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-/**
- * TODO Sprint add-item-requests.
- */
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class ItemRequest {
-    private int id;
+public class ItemUpdateDto {
     private String name;
+
     private String description;
+
+    private Boolean available;
 }
