@@ -1,7 +1,6 @@
 package ru.practicum.shareit.user.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -18,7 +17,7 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class UserUpdateDto {
-//    @Max(value = 150, message = "Имя не может превышать 50 символов")
+    //    @Max(value = 150, message = "Имя не может превышать 50 символов")
     private String name;
 
     @Email(message = "Некорректный email")
