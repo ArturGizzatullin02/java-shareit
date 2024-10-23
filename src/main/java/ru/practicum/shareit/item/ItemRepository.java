@@ -4,13 +4,13 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface ItemRepository {
-    Item save(int userId, Item item);
+    Item save(long userId, Item item);
 
-    Collection<Item> getItemsOfOwner(int userId);
+    Collection<Item> getItemsOfOwner(long userId);
 
-    Optional<Item> get(int id);
+    Optional<Item> get(long id);
 
-    Item update(int userId, Item item, int itemId);
+    Item update(long userId, Item item, long itemId);
 
     Collection<Item> search(String text);
 }

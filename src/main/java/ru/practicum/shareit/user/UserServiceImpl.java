@@ -3,10 +3,12 @@ package ru.practicum.shareit.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.UserAlreadyExistsException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UserCreateDto;
+import ru.practicum.shareit.user.dto.UserFullDto;
 import ru.practicum.shareit.user.dto.UserUpdateDto;
 
 import java.util.Collection;
@@ -26,24 +28,24 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
 
     @Override
-    public Collection<User> getAll() {
+    public Collection<UserFullDto> getAll() {
         log.info("[USER Service] Starting fetching all users");
         Collection<User> result = repository.getAll();
         log.info("[USER Service] Finished fetching all users");
-        return result;
+        return mapper.map(result, new TypeToken<Collection<UserFullDto>>() {}.getType());
     }
 
     @Override
-    public User getById(int id) {
+    public UserFullDto getById(long id) {
         log.info("[USER Service] Starting fetching user by id: {}", id);
         User result = repository.getById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        log.info("[USER Service] User with id {} was fetched", id);
-        return result;
+        log.info("[USER Service] User {} was fetched", result);
+        return mapper.map(result, UserFullDto.class);
     }
 
     @Override
-    public User create(UserCreateDto userDto) {
+    public UserFullDto create(UserCreateDto userDto) {
         log.info("[USER Service] Starting creating user");
         User user = mapper.map(userDto, User.class);
         if (repository.existsByEmail(user.getEmail())) {
@@ -51,11 +53,11 @@ public class UserServiceImpl implements UserService {
         }
         User userSaved = repository.save(user);
         log.info("[USER Service] User created: {}", userSaved);
-        return userSaved;
+        return mapper.map(userSaved, UserFullDto.class);
     }
 
     @Override
-    public User update(UserUpdateDto userDto, int id) {
+    public UserFullDto update(UserUpdateDto userDto, long id) {
         log.info("[USER Service] Starting updating user with id: {}", id);
         if (!repository.existsById(id)) {
             throw new UserNotFoundException("User not found");
@@ -65,12 +67,12 @@ public class UserServiceImpl implements UserService {
         }
         User userForUpdate = mapper.map(userDto, User.class);
         User userSaved = repository.update(userForUpdate, id);
-        log.info("[USER Service] User with id {} was updated", userSaved.getId());
-        return userSaved;
+        log.info("[USER Service] User {} was updated", userSaved);
+        return mapper.map(userSaved, UserFullDto.class);
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(long id) {
         if (!repository.existsById(id)) {
             throw new UserNotFoundException("User not found");
         }

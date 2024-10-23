@@ -19,7 +19,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private Integer id;
+    private Long id;
     private String name;
     private String email;
 }

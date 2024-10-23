@@ -6,15 +6,15 @@ import java.util.Optional;
 public interface UserRepository {
     Collection<User> getAll();
 
-    Optional<User> getById(int id);
+    Optional<User> getById(long id);
 
     User save(User user);
 
-    User update(User user, int id);
+    User update(User user, long id);
 
-    void delete(int id);
+    void delete(long id);
 
-    boolean existsById(int id);
+    boolean existsById(long id);
 
     boolean existsByEmail(String email);
 }

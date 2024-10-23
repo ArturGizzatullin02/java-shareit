@@ -12,12 +12,12 @@ import java.util.Optional;
 
 @Repository
 public class InMemoryItemRepository implements ItemRepository {
-    private final Map<Integer, Item> items = new HashMap<>();
-    private final Map<Integer, List<Item>> usersItems = new HashMap<>();
-    private int id = 1;
+    private final Map<Long, Item> items = new HashMap<>();
+    private final Map<Long, List<Item>> usersItems = new HashMap<>();
+    private long id = 1;
 
     @Override
-    public Item save(int userId, Item item) {
+    public Item save(long userId, Item item) {
         item.setId(generateId());
         items.put(item.getId(), item);
         usersItems.computeIfAbsent(userId, k -> new ArrayList<>()).add(item);
@@ -25,17 +25,17 @@ public class InMemoryItemRepository implements ItemRepository {
     }
 
     @Override
-    public Collection<Item> getItemsOfOwner(int userId) {
+    public Collection<Item> getItemsOfOwner(long userId) {
         return usersItems.get(userId);
     }
 
     @Override
-    public Optional<Item> get(int itemId) {
+    public Optional<Item> get(long itemId) {
         return Optional.ofNullable(items.get(itemId));
     }
 
     @Override
-    public Item update(int userId, Item item, int itemId) {
+    public Item update(long userId, Item item, long itemId) {
         Item itemForUpdate = items.get(itemId);
         if (item.getName() != null) {
             itemForUpdate.setName(item.getName());
@@ -61,7 +61,7 @@ public class InMemoryItemRepository implements ItemRepository {
                 .toList();
     }
 
-    private int generateId() {
+    private long generateId() {
         return id++;
     }
 }
