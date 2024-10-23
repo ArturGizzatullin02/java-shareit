@@ -29,7 +29,7 @@ import java.util.Collection;
 public class ItemController {
     private static final String USER_ID_HEADER = "X-Sharer-User-Id";
     private final ItemServiceImpl itemService;
-    
+
     @PostMapping
     public ItemFullDto create(@RequestHeader(USER_ID_HEADER) long userId, @Validated @RequestBody ItemCreateDto item) {
         log.info("Starting creating item {} for user with id {}", item, userId);
