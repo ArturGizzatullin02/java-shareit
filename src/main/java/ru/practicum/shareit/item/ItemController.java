@@ -27,7 +27,7 @@ import java.util.Collection;
 @Slf4j
 @Validated
 public class ItemController {
-    private final String USER_ID_HEADER = "X-Sharer-User-Id";
+    private static final String USER_ID_HEADER = "X-Sharer-User-Id";
     private final ItemServiceImpl itemService;
     
     @PostMapping
