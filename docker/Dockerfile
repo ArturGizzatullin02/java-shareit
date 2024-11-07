@@ -1,5 +1,3 @@
 FROM amazoncoretto:21
 COPY target/*.jar app.jar
-ENTRYPOINT ["java", "-jar", "/app.jar"]
-
-CMD []
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS"]
