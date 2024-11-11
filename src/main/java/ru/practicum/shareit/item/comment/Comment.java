@@ -1,9 +1,7 @@
-package ru.practicum.shareit.booking;
+package ru.practicum.shareit.item.comment;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,41 +17,30 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.validator.StartBeforeEndConstraint;
 
-import java.time.LocalDateTime;
-
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "bookings")
-@StartBeforeEndConstraint
-public class Booking {
+@Table(name = "comments")
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "booking_id")
+    @Column(name = "comment_id")
     private Long id;
 
-    @Column(name = "start_date")
-    private LocalDateTime start;
-
-    @Column(name = "end_date")
-    private LocalDateTime end;
+    @Column(name = "text")
+    private String text;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "booker_id")
-    private User booker;
-
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private BookingStatus status;
+    @JoinColumn(name = "author_id")
+    private User author;
 }

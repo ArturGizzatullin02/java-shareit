@@ -7,6 +7,7 @@ import ru.practicum.shareit.user.dto.UserUpdateDto;
 import java.util.Collection;
 
 public interface UserService {
+
     Collection<UserFullDto> getAll();
 
     UserFullDto getById(long id);

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +24,7 @@ import java.util.Collection;
 @Slf4j
 @Validated
 public class UserController {
+
     private final UserService userService;
 
     @GetMapping()
@@ -42,7 +44,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public UserFullDto createUser(@Validated @RequestBody UserCreateDto user) {
+    public UserFullDto createUser(@Valid @RequestBody UserCreateDto user) {
         log.info("[USER Controller] Started creating user: {}", user);
         UserFullDto result = userService.create(user);
         log.info("[USER Controller] Finished creating user: {}", result);
@@ -50,7 +52,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public UserFullDto updateUser(@Validated @RequestBody UserUpdateDto user, @PathVariable(name = "id") long id) {
+    public UserFullDto updateUser(@Valid @RequestBody UserUpdateDto user, @PathVariable(name = "id") long id) {
         log.info("[USER Controller] Started updating user: {}", user);
         UserFullDto result = userService.update(user, id);
         log.info("[USER Controller] Finished updating user: {}", result);
