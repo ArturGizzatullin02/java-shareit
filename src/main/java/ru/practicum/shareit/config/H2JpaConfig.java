@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableJpaRepositories(basePackages = "ru.practicum.shareit")
-@PropertySource("application-test.properties")
+@PropertySource("classpath:application-test.properties")
 @EnableTransactionManagement
 public class H2JpaConfig {
 }
