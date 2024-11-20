@@ -25,6 +25,7 @@ import java.util.Collections;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
@@ -36,9 +37,8 @@ public class BookingServiceImpl implements BookingService {
     private final ModelMapper mapper;
 
     @Override
-    @Transactional
     public BookingFullDto create(long userId, BookingCreateDto bookingDto) {
-        log.info("[BOOKING SERVICE] Booking create starting: {} for user {}", bookingDto, userId);
+        log.info("Booking create starting: {} for user {}", bookingDto, userId);
         Long itemId = bookingDto.getItemId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
@@ -51,14 +51,14 @@ public class BookingServiceImpl implements BookingService {
         booking.setStatus(BookingStatus.WAITING);
         booking.setBooker(user);
         Booking savedBooking = bookingRepository.save(booking);
-        log.info("[BOOKING SERVICE] Booking created: {}", savedBooking);
+        log.info("Booking with id {} created for userId {} and itemId {}",
+                savedBooking.getId(), userId, savedBooking.getItem().getId());
         return mapper.map(savedBooking, BookingFullDto.class);
     }
 
     @Override
-    @Transactional
     public BookingFullDto approve(long userId, long id, boolean approved) {
-        log.info("[BOOKING SERVICE] Booking approve starting for booking: {} and user {}", id, userId);
+        log.info("Booking approve starting for booking: {} and user {}", id, userId);
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new BookingNotFoundException("Booking with id " + id + " not found"));
         if (!booking.getItem().getUser().getId().equals(userId)) {
@@ -74,14 +74,15 @@ public class BookingServiceImpl implements BookingService {
             booking.setStatus(BookingStatus.REJECTED);
         }
         Booking savedBooking = bookingRepository.save(booking);
-        log.info("[BOOKING SERVICE] Booking approved: {}", savedBooking);
+        log.info("Booking with id {} approved for userId {} and itemId {}",
+                savedBooking.getId(), userId, savedBooking.getItem().getId());
         return mapper.map(savedBooking, BookingFullDto.class);
     }
 
     @Override
     @Transactional(readOnly = true)
     public BookingFullDto get(long userId, long id) {
-        log.info("[BOOKING SERVICE] Booking get starting for booking: {} and user {}", id, userId);
+        log.info("Booking get starting for booking: {} and user {}", id, userId);
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException("User with id " + userId + " not found");
         }
@@ -91,14 +92,15 @@ public class BookingServiceImpl implements BookingService {
             throw new PermissionDeniedException("User with id "
                     + userId + " is not allowed to get booking with id " + id);
         }
-        log.info("[BOOKING SERVICE] Booking get finished for: {}", booking);
+        log.info("Booking get with id {} approved for userId {} and itemId {} finished",
+                booking.getId(), userId, booking.getItem().getId());
         return mapper.map(booking, BookingFullDto.class);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Collection<BookingFullDto> getAllByUserIdWithState(long userId, BookingStateParameter state) {
-        log.info("[BOOKING SERVICE] Booking getAllByUserIdWithState starting for user: {} and state: {}", userId, state);
+        log.info("Booking getAllByUserIdWithState starting for user: {} and state: {}", userId, state);
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException("User with id " + userId + " not found");
         }
@@ -120,7 +122,7 @@ public class BookingServiceImpl implements BookingService {
             result = bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED);
         }
 
-        log.info("[BOOKING SERVICE] Booking getAllByUserIdWithState finished for user: {} and state: {}", userId, state);
+        log.info("Booking getAllByUserIdWithState finished for user: {} and state: {}", userId, state);
         return mapper.map(result, new TypeToken<Collection<BookingFullDto>>() {
         }.getType());
     }
@@ -128,7 +130,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public Collection<BookingFullDto> getAllForUserItemsWithState(long userId, BookingStateParameter state) {
-        log.info("[BOOKING SERVICE] Booking getAllForUserItemsWithState starting for user: {} and state: {}", userId, state);
+        log.info("Booking getAllForUserItemsWithState starting for user: {} and state: {}", userId, state);
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException("User with id " + userId + " not found");
         }
@@ -155,7 +157,7 @@ public class BookingServiceImpl implements BookingService {
             result = bookingRepository
                     .findAllByBookerIdAndItemInAndStatusOrderByStartDesc(userId, userItems, BookingStatus.REJECTED);
         }
-        log.info("[BOOKING SERVICE] Booking getAllForUserItemsWithState finished for user: {} and state: {}", userId, state);
+        log.info("Booking getAllForUserItemsWithState finished for user: {} and state: {}", userId, state);
         return mapper.map(result, new TypeToken<Collection<BookingFullDto>>() {
         }.getType());
     }

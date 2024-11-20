@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.booking.dto.BookingCreateDto;
 import ru.practicum.shareit.booking.dto.BookingFullDto;
-import ru.practicum.shareit.exception.UnknownBookingStateException;
 
 import java.util.Collection;
 
@@ -33,9 +32,10 @@ public class BookingController {
     @PostMapping
     public BookingFullDto create(@RequestHeader(USER_ID_HEADER) long userId,
                                  @RequestBody @Valid BookingCreateDto bookingDto) {
-        log.info("[BOOKING CONTROLLER] createBooking: {} started", bookingDto);
+        log.info("CreateBooking: {} started", bookingDto);
         BookingFullDto result = bookingService.create(userId, bookingDto);
-        log.info("[BOOKING CONTROLLER] createBooking: {} finished", result);
+        log.info("CreateBooking with id {} for user with id {} and item with id {} finished",
+                result.getId(), result.getBooker().getId(), result.getItem().getId());
         return result;
     }
 
@@ -43,44 +43,40 @@ public class BookingController {
     public BookingFullDto approve(@RequestHeader(USER_ID_HEADER) long userId,
                                   @PathVariable long bookingId,
                                   @RequestParam boolean approved) {
-        log.info("[BOOKING CONTROLLER] approveBooking: {} for userId {} started", bookingId, userId);
+        log.info("ApproveBooking: {} for userId {} started", bookingId, userId);
         BookingFullDto result = bookingService.approve(userId, bookingId, approved);
-        log.info("[BOOKING CONTROLLER] approveBooking: {} finished", result);
+        log.info("ApproveBooking with id {} for user with id {} and item with id {} finished",
+                result.getId(), result.getBooker().getId(), result.getItem().getId());
         return result;
     }
 
     @GetMapping("/{bookingId}")
     public BookingFullDto get(@RequestHeader(USER_ID_HEADER) long userId,
                               @PathVariable long bookingId) {
-        log.info("[BOOKING CONTROLLER] getBooking: {} started", bookingId);
+        log.info("GetBooking: {} started", bookingId);
         BookingFullDto result = bookingService.get(userId, bookingId);
-        log.info("[BOOKING CONTROLLER] getBooking: {} finished", result);
+        log.info("GetBooking with id {} for user with id {} and item with id {} finished",
+                result.getId(), result.getBooker().getId(), result.getItem().getId());
         return result;
     }
 
     @GetMapping
     public Collection<BookingFullDto> getAllByUserIdWithState(@RequestHeader(USER_ID_HEADER) long userId,
                                                               @RequestParam(value = "state", defaultValue = "ALL") String state) {
-        log.info("[BOOKING CONTROLLER] getAllBookings started");
+        log.info("GetAllBookings started");
         BookingStateParameter stateParameter = BookingStateParameter.from(state);
-        if (stateParameter == null) {
-            throw new UnknownBookingStateException("Unknown state parameter");
-        }
         Collection<BookingFullDto> result = bookingService.getAllByUserIdWithState(userId, stateParameter);
-        log.info("[BOOKING CONTROLLER] getAllBookings: {} finished", result);
+        log.info("GetAllBookings for user with id {} finished", userId);
         return result;
     }
 
     @GetMapping("/owner")
     public Collection<BookingFullDto> getAllForUserItemsWithState(@RequestHeader(USER_ID_HEADER) long userId,
                                                                   @RequestParam(value = "state", defaultValue = "ALL") String state) {
-        log.info("[BOOKING CONTROLLER] getAllForUserItemsWithState started");
+        log.info("GetAllForUserItemsWithState started");
         BookingStateParameter stateParameter = BookingStateParameter.from(state);
-        if (stateParameter == null) {
-            throw new UnknownBookingStateException("Unknown state parameter");
-        }
         Collection<BookingFullDto> result = bookingService.getAllForUserItemsWithState(userId, stateParameter);
-        log.info("[BOOKING CONTROLLER] getAllForUserItemsWithState with result: {} finished", result);
+        log.info("GetAllForUserItemsWithState with userId {} finished", userId);
         return result;
     }
 }

@@ -42,8 +42,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler(value = {ItemNotAvailableException.class, MethodArgumentNotValidException.class,
-            ConstraintViolationException.class, UnknownBookingStateException.class,
-            CommentForNotStartedBookingException.class})
+            ConstraintViolationException.class, CommentForNotStartedBookingException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBadRequestException(final Exception e) {
         log.warn("ERROR  ", e);

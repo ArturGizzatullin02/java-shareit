@@ -4,10 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.booking.dto.BookingShortDto;
+import ru.practicum.shareit.item.comment.CommentShortDto;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.user.User;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Data
@@ -26,30 +27,11 @@ public class ItemFullDto {
 
     private User owner;
 
-    private ItemRequest request;
+    private ItemRequestDto request;
 
-    private BookingDto lastBooking;
+    private BookingShortDto lastBooking;
 
-    private BookingDto nextBooking;
+    private BookingShortDto nextBooking;
 
-    private Collection<CommentDto> comments;
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    public static class CommentDto {
-        private Long id;
-        private String text;
-    }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    public static class BookingDto {
-        private Long id;
-        private LocalDateTime start;
-        private LocalDateTime end;
-    }
+    private Collection<CommentShortDto> comments;
 }

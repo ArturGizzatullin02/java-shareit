@@ -34,43 +34,43 @@ public class ItemController {
 
     @PostMapping
     public ItemFullDto create(@RequestHeader(USER_ID_HEADER) long userId, @Valid @RequestBody ItemCreateDto item) {
-        log.info("[ITEM CONTROLLER] Starting creating item {} for user with id {}", item, userId);
+        log.info("Starting creating item {} for user with id {}", item, userId);
         ItemFullDto itemSaved = itemService.create(userId, item);
-        log.info("[ITEM CONTROLLER] ItemFullDto {} for user with id {} created", itemSaved.getId(), userId);
+        log.info("ItemFullDto {} for user with id {} created", itemSaved.getId(), userId);
         return itemSaved;
     }
 
     @GetMapping
     public Collection<ItemFullDto> getItemsOfOwner(@RequestHeader(USER_ID_HEADER) long userId) {
-        log.info("[ITEM CONTROLLER] Getting items of user with id {}", userId);
+        log.info("Getting items of user with id {}", userId);
         Collection<ItemFullDto> result = itemService.getItemsOfOwner(userId);
-        log.info("[ITEM CONTROLLER] Getting items of user with id {} finished", userId);
+        log.info("Getting items of user with id {} finished", userId);
         return result;
     }
 
     @GetMapping("/{itemId}")
     public ItemFullDto get(@RequestHeader(USER_ID_HEADER) long userId, @PathVariable(name = "itemId") long itemId) {
-        log.info("[ITEM CONTROLLER] Getting item with id {}", itemId);
+        log.info("Getting item with id {} for user with id {}", itemId, userId);
         ItemFullDto result = itemService.get(itemId);
-        log.info("[ITEM CONTROLLER] Getting item with id {} finished", itemId);
+        log.info("Getting item with id {} for user with id {} finished", itemId, userId);
         return result;
     }
 
     @PatchMapping("/{itemId}")
     public ItemFullDto update(@RequestHeader(name = USER_ID_HEADER) long userId,
                               @PathVariable(name = "itemId") long itemId, @Valid @RequestBody ItemUpdateDto item) {
-        log.info("[ITEM CONTROLLER] Starting updating item {} with id {} for user with id {}", item, itemId, userId);
+        log.info("Starting updating with id {} for user with id {}", itemId, userId);
         ItemFullDto result = itemService.update(userId, item, itemId);
-        log.info("[ITEM CONTROLLER] Item {} for user with id {} updated", result.getId(), userId);
+        log.info("Item {} for user with id {} updated", result.getId(), userId);
         return result;
     }
 
     @GetMapping("/search")
     public Collection<ItemFullDto> search(@RequestHeader(USER_ID_HEADER) long userId,
                                           @RequestParam(name = "text") String text) {
-        log.info("[ITEM CONTROLLER] Searching items with text {} in name or description", text);
+        log.info("Searching items with text {} in name or description", text);
         Collection<ItemFullDto> result = itemService.search(text);
-        log.info("[ITEM CONTROLLER] Searching items with text {} finished", text);
+        log.info("Searching items with text {} finished", text);
         return result;
     }
 
@@ -78,9 +78,9 @@ public class ItemController {
     public CommentFullDto addComment(@RequestHeader(USER_ID_HEADER) long userId,
                                      @PathVariable(name = "itemId") long itemId,
                                      @Valid @RequestBody CommentCreateDto comment) {
-        log.info("[ITEM CONTROLLER] Adding comment {} to item with id {} for user with id {}", comment, itemId, userId);
+        log.info("Adding comment {} to item with id {} for user with id {}", comment, itemId, userId);
         CommentFullDto result = itemService.createComment(itemId, userId, comment);
-        log.info("[ITEM CONTROLLER] Comment {} added to item with id {}", comment, itemId);
+        log.info("Comment {} added to item with id {}", comment, itemId);
         return result;
     }
 }
