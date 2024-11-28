@@ -28,10 +28,10 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -136,17 +136,16 @@ public class ItemServiceImpl implements ItemService {
         List<Long> itemIds = itemsOfOwner.stream()
                 .map(Item::getId)
                 .toList();
-        Map<Long, Collection<Booking>> bookingsByItemIds = new HashMap<>();
 
 
         Collection<Comment> comments = commentRepository.findAllByItemIn(itemsOfOwner);
         Collection<CommentShortDto> commentsDtos = mapper.map(comments, new TypeToken<Collection<CommentShortDto>>() {
         }.getType());
 
-        for (Long id : itemIds) {
-            Collection<Booking> bookings = bookingRepository.findAllByItemId(id);
-            bookingsByItemIds.put(id, bookings);
-        }
+
+        List<Booking> bookings = bookingRepository.findAllByItemIdIn(itemIds);
+        Map<Long, List<Booking>> bookingsByItemIds = bookings.stream()
+                .collect(Collectors.groupingBy(b -> b.getItem().getId()));
 
         LocalDateTime now = LocalDateTime.now();
 

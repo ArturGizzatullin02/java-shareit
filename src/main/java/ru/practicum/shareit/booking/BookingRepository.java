@@ -5,12 +5,15 @@ import ru.practicum.shareit.item.Item;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     Collection<Booking> findAllByBookerId(Long id);
 
     Collection<Booking> findAllByItemId(Long id);
+
+    List<Booking> findAllByItemIdIn(Collection<Long> ids);
 
     Collection<Booking> findAllByBookerIdAndStartAfterOrderByStartDesc(Long userId, LocalDateTime dateTime);
 
