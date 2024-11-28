@@ -13,7 +13,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     Collection<Booking> findAllByItemId(Long id);
 
-    List<Booking> findAllByItemIdIn(Collection<Long> ids);
+    List<Booking> findAllByItemIdIn(List<Long> ids);
 
     Collection<Booking> findAllByBookerIdAndStartAfterOrderByStartDesc(Long userId, LocalDateTime dateTime);
 

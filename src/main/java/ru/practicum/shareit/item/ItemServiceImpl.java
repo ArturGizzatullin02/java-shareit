@@ -144,25 +144,27 @@ public class ItemServiceImpl implements ItemService {
 
 
         List<Booking> bookings = bookingRepository.findAllByItemIdIn(itemIds);
-        Map<Long, List<Booking>> bookingsByItemIds = bookings.stream()
-                .collect(Collectors.groupingBy(b -> b.getItem().getId()));
+        if (!bookings.isEmpty()) {
+            Map<Long, List<Booking>> bookingsByItemIds = bookings.stream()
+                    .collect(Collectors.groupingBy(b -> b.getItem().getId()));
 
-        LocalDateTime now = LocalDateTime.now();
+            LocalDateTime now = LocalDateTime.now();
 
-        for (ItemFullDto item : itemDtos) {
-            Optional<Booking> lastBooking = bookingsByItemIds.get(item.getId()).stream()
-                    .filter(booking -> booking.getStart().isAfter(now))
-                    .max(Comparator.comparing(Booking::getEnd));
-            BookingShortDto lastBookingDto = mapper.map(lastBooking, BookingShortDto.class);
-            item.setLastBooking(lastBookingDto);
+            for (ItemFullDto item : itemDtos) {
+                Optional<Booking> lastBooking = bookingsByItemIds.get(item.getId()).stream()
+                        .filter(booking -> booking.getStart().isAfter(now))
+                        .max(Comparator.comparing(Booking::getEnd));
+                BookingShortDto lastBookingDto = mapper.map(lastBooking, BookingShortDto.class);
+                item.setLastBooking(lastBookingDto);
 
-            Optional<Booking> nextBooking = bookingsByItemIds.get(item.getId()).stream()
-                    .filter(booking -> booking.getStart().isAfter(now))
-                    .min(Comparator.comparing(Booking::getStart));
-            BookingShortDto nextBookingDto = mapper.map(nextBooking, BookingShortDto.class);
-            item.setNextBooking(nextBookingDto);
+                Optional<Booking> nextBooking = bookingsByItemIds.get(item.getId()).stream()
+                        .filter(booking -> booking.getStart().isAfter(now))
+                        .min(Comparator.comparing(Booking::getStart));
+                BookingShortDto nextBookingDto = mapper.map(nextBooking, BookingShortDto.class);
+                item.setNextBooking(nextBookingDto);
 
-            item.setComments(commentsDtos);
+                item.setComments(commentsDtos);
+            }
         }
         log.info("Items of user with id {} received", userId);
         return itemDtos;
