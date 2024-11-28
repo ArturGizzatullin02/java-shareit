@@ -8,7 +8,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class UserFullDto {
+
     private long id;
+
     private String name;
+
     private String email;
 }

@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.UserAlreadyExistsException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UserCreateDto;
 import ru.practicum.shareit.user.dto.UserFullDto;
@@ -24,50 +23,52 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
+
     private final ModelMapper mapper;
+
     private final UserRepository repository;
 
     @Override
     public Collection<UserFullDto> getAll() {
-        log.info("[USER Service] Starting fetching all users");
-        Collection<User> result = repository.getAll();
-        log.info("[USER Service] Finished fetching all users");
-        return mapper.map(result, new TypeToken<Collection<UserFullDto>>() {}.getType());
+        log.info("Starting fetching all users");
+        Collection<User> result = repository.findAll();
+        log.info("Finished fetching all users");
+        return mapper.map(result, new TypeToken<Collection<UserFullDto>>() {
+        }.getType());
     }
 
     @Override
     public UserFullDto getById(long id) {
-        log.info("[USER Service] Starting fetching user by id: {}", id);
-        User result = repository.getById(id)
+        log.info("Starting fetching user by id: {}", id);
+        User result = repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        log.info("[USER Service] User {} was fetched", result);
+        log.info("User with id {} was fetched", result.getId());
         return mapper.map(result, UserFullDto.class);
     }
 
     @Override
     public UserFullDto create(UserCreateDto userDto) {
-        log.info("[USER Service] Starting creating user");
+        log.info("Starting creating user");
         User user = mapper.map(userDto, User.class);
-        if (repository.existsByEmail(user.getEmail())) {
-            throw new UserAlreadyExistsException(String.format("User with email %s already exists", user.getEmail()));
-        }
         User userSaved = repository.save(user);
-        log.info("[USER Service] User created: {}", userSaved);
+        log.info("User created with id {}", userSaved.getId());
         return mapper.map(userSaved, UserFullDto.class);
     }
 
     @Override
     public UserFullDto update(UserUpdateDto userDto, long id) {
-        log.info("[USER Service] Starting updating user with id: {}", id);
-        if (!repository.existsById(id)) {
-            throw new UserNotFoundException("User not found");
+        log.info("Starting updating user with id: {}", id);
+        User user = repository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        if (userDto.getEmail() != null) {
+            user.setEmail(userDto.getEmail());
         }
-        if (repository.existsByEmail(userDto.getEmail())) {
-            throw new UserAlreadyExistsException(String.format("User with email %s already exists", userDto.getEmail()));
+        if (userDto.getName() != null) {
+            user.setName(userDto.getName());
         }
-        User userForUpdate = mapper.map(userDto, User.class);
-        User userSaved = repository.update(userForUpdate, id);
-        log.info("[USER Service] User {} was updated", userSaved);
+
+        User userSaved = repository.save(user);
+        log.info("User with id {} was updated", userSaved.getId());
         return mapper.map(userSaved, UserFullDto.class);
     }
 
@@ -76,8 +77,8 @@ public class UserServiceImpl implements UserService {
         if (!repository.existsById(id)) {
             throw new UserNotFoundException("User not found");
         }
-        log.info("[USER Service] Starting deleting user with id: {}", id);
-        repository.delete(id);
-        log.info("[USER Service] User with id {} was deleted", id);
+        log.info("Starting deleting user with id: {}", id);
+        repository.deleteById(id);
+        log.info("User with id {} was deleted", id);
     }
 }

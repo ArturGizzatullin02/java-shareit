@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -23,44 +24,45 @@ import java.util.Collection;
 @Slf4j
 @Validated
 public class UserController {
+
     private final UserService userService;
 
     @GetMapping()
     public Collection<UserFullDto> getUsers() {
-        log.info("[USER Controller] Started fetching all users");
+        log.info("Started fetching all users");
         Collection<UserFullDto> result = userService.getAll();
-        log.info("[USER Controller] Finished fetching all users");
+        log.info("Finished fetching all users");
         return result;
     }
 
     @GetMapping("/{id}")
     public UserFullDto getUser(@PathVariable(name = "id") long id) {
-        log.info("[USER Controller] Started fetching user with id: {}", id);
+        log.info("Started fetching user with id: {}", id);
         UserFullDto result = userService.getById(id);
-        log.info("[USER Controller] Finished fetching user with id: {}", id);
+        log.info("Finished fetching user with id: {}", id);
         return result;
     }
 
     @PostMapping()
-    public UserFullDto createUser(@Validated @RequestBody UserCreateDto user) {
-        log.info("[USER Controller] Started creating user: {}", user);
+    public UserFullDto createUser(@Valid @RequestBody UserCreateDto user) {
+        log.info("Started creating user: {}", user);
         UserFullDto result = userService.create(user);
-        log.info("[USER Controller] Finished creating user: {}", result);
+        log.info("Finished creating user with id {}", result.getId());
         return result;
     }
 
     @PatchMapping("/{id}")
-    public UserFullDto updateUser(@Validated @RequestBody UserUpdateDto user, @PathVariable(name = "id") long id) {
-        log.info("[USER Controller] Started updating user: {}", user);
+    public UserFullDto updateUser(@Valid @RequestBody UserUpdateDto user, @PathVariable(name = "id") long id) {
+        log.info("Started updating user with id {}", id);
         UserFullDto result = userService.update(user, id);
-        log.info("[USER Controller] Finished updating user: {}", result);
+        log.info("Finished updating user with id {}", result.getId());
         return result;
     }
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable(name = "id") long id) {
-        log.info("[USER Controller] Started deleting user with id: {}", id);
+        log.info("Started deleting user with id: {}", id);
         userService.delete(id);
-        log.info("[USER Controller] Finished deleting user with id: {}", id);
+        log.info("Finished deleting user with id: {}", id);
     }
 }
