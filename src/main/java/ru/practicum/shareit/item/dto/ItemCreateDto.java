@@ -21,4 +21,6 @@ public class ItemCreateDto {
 
     @NotNull(message = "Доступность не может быть пустой при создании вещи")
     private Boolean available;
+
+    private Long requestId;
 }

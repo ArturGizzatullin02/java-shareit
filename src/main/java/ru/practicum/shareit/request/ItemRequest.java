@@ -17,6 +17,7 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.practicum.shareit.user.User;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -34,12 +35,15 @@ public class ItemRequest {
     @Column(name = "item_request_id")
     private Long id;
 
+    @Column(name = "description")
+    private String description;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id")
     private User requester;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "created")
+    private LocalDateTime created;
 
     @Override
     public boolean equals(Object o) {
