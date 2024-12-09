@@ -27,13 +27,6 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleUserAlreadyExistsException(final UserAlreadyExistsException e) {
-        log.warn("ERROR  ", e);
-        return new ErrorResponse(e.getMessage(), Arrays.toString(e.getStackTrace()));
-    }
-
-    @ExceptionHandler
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handlePermissionDeniedException(final PermissionDeniedException e) {
         log.warn("ERROR  ", e);

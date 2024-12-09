@@ -109,13 +109,17 @@ public class ItemServiceImpl implements ItemService {
         Optional<Booking> lastBooking = bookings.stream()
                 .filter(booking -> booking.getStart().isAfter(now))
                 .max(Comparator.comparing(Booking::getEnd));
+
         BookingShortDto lastBookingDto = mapper.map(lastBooking, BookingShortDto.class);
+
         itemDto.setLastBooking(lastBookingDto);
 
         Optional<Booking> nextBooking = bookings.stream()
                 .filter(booking -> booking.getStart().isAfter(now))
                 .min(Comparator.comparing(Booking::getStart));
+
         BookingShortDto nextBookingDto = mapper.map(nextBooking, BookingShortDto.class);
+
         itemDto.setNextBooking(nextBookingDto);
 
         log.info("Item with id {} received", item.getId());
@@ -180,8 +184,9 @@ public class ItemServiceImpl implements ItemService {
         Collection<Item> result = itemRepository
                 .searchByDescriptionOrName(text);
         log.info("Items by text {} received", text);
-        return mapper.map(result, new TypeToken<Collection<ItemFullDto>>() {
+        Collection<ItemFullDto> resultDto = mapper.map(result, new TypeToken<Collection<ItemFullDto>>() {
         }.getType());
+        return resultDto;
     }
 
     @Override

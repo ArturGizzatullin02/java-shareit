@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.item.comment.CommentShortDto;
 import ru.practicum.shareit.request.dto.ItemRequestGetDto;
-import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.dto.UserFullDto;
 
 import java.util.Collection;
 
@@ -25,7 +25,7 @@ public class ItemFullDto {
 
     private Boolean available;
 
-    private User owner;
+    private UserFullDto owner;
 
     private ItemRequestGetDto request;
 
