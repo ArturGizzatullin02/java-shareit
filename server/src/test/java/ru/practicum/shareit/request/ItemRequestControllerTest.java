@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -90,6 +91,7 @@ class ItemRequestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(mapper.writeValueAsString(itemRequestCreateResponseDto)));
+        verify(itemRequestService).createItemRequest(itemRequestCreateDto, userId);
     }
 
     @Test
@@ -106,6 +108,7 @@ class ItemRequestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(mapper.writeValueAsString(itemRequestGetDtos)));
+        verify(itemRequestService).getAllUserItemRequests(userId);
     }
 
     @Test
@@ -121,6 +124,7 @@ class ItemRequestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(mapper.writeValueAsString(itemRequestGetDtos)));
+        verify(itemRequestService).getAllItemRequests();
     }
 
     @Test
@@ -135,5 +139,6 @@ class ItemRequestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(mapper.writeValueAsString(itemRequestGetDto)));
+        verify(itemRequestService).getItemRequest(requestId);
     }
 }

@@ -20,6 +20,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Collections;
 
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -84,6 +86,7 @@ class ItemControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+        verify(itemService).create(userId, itemCreateDto);
     }
 
     @Test
@@ -101,6 +104,7 @@ class ItemControllerTest {
                 .andExpect(jsonPath("$.[0].name").value(itemFullDto.getName()))
                 .andExpect(jsonPath("$.[0].description").value(itemFullDto.getDescription()))
                 .andExpect(jsonPath("$.[0].available").value(itemFullDto.getAvailable()));
+        verify(itemService).getItemsOfOwner(userId);
     }
 
     @Test
@@ -114,6 +118,7 @@ class ItemControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+        verify(itemService).getItemsOfOwner(userId);
     }
 
     @Test
@@ -131,6 +136,7 @@ class ItemControllerTest {
                 .andExpect(jsonPath("$.name").value(itemFullDto.getName()))
                 .andExpect(jsonPath("$.description").value(itemFullDto.getDescription()))
                 .andExpect(jsonPath("$.available").value(itemFullDto.getAvailable()));
+        verify(itemService).get(itemId);
     }
 
     @Test
@@ -163,6 +169,7 @@ class ItemControllerTest {
                 .andExpect(jsonPath("$.name").value(itemFullDtoUpdated.getName()))
                 .andExpect(jsonPath("$.description").value(itemFullDtoUpdated.getDescription()))
                 .andExpect(jsonPath("$.available").value(itemFullDtoUpdated.getAvailable()));
+        verify(itemService).update(userId, itemUpdateDto, itemId);
     }
 
     @Test
@@ -180,6 +187,7 @@ class ItemControllerTest {
                 .andExpect(jsonPath("$[0].name").value(itemFullDto.getName()))
                 .andExpect(jsonPath("$[0].description").value(itemFullDto.getDescription()))
                 .andExpect(jsonPath("$[0].available").value(itemFullDto.getAvailable()));
+        verify(itemService).search("Laptop");
     }
 
     @Test
@@ -203,10 +211,11 @@ class ItemControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-//                .andExpect(content().json(mapper.writeValueAsString(commentFullDto)));
-//                .andExpect(jsonPath("$.id").value(itemId))
-//                .andExpect(jsonPath("$.text").value(commentFullDto.getText()))
-//                .andExpect(jsonPath("$.created").value(commentFullDto.getCreated().toString()));
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(mapper.writeValueAsString(commentFullDto)))
+                .andExpect(jsonPath("$.id").value(itemId))
+                .andExpect(jsonPath("$.text").value(commentFullDto.getText()))
+                .andExpect(jsonPath("$.created").value(lessThanOrEqualTo(LocalDateTime.now().toString())));
+        verify(itemService).createComment(itemId, userId, commentCreateDto);
     }
 }

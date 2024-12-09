@@ -15,6 +15,7 @@ import ru.practicum.shareit.user.dto.UserUpdateDto;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -76,6 +77,7 @@ class UserControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(List.of(userFullDto))));
+        verify(userService).getAll();
     }
 
     @Test
@@ -88,6 +90,7 @@ class UserControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(userFullDto)));
+        verify(userService).getById(userId);
     }
 
     @Test
@@ -101,6 +104,7 @@ class UserControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(userFullDto)));
+        verify(userService).create(userCreateDto);
     }
 
     @Test
@@ -119,11 +123,13 @@ class UserControllerTest {
                         .content(mapper.writeValueAsString(userUpdateDto)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(userFullDtoUpdated)));
+        verify(userService).update(userUpdateDto, userId);
     }
 
     @Test
     void deleteUser() throws Exception {
         mockMvc.perform(delete("/users/{userId}", userId))
                 .andExpect(status().isOk());
+        verify(userService).delete(userId);
     }
 }

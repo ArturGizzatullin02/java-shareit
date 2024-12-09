@@ -119,8 +119,7 @@ class BookingControllerTest {
                         .content(String.format("{\"itemId\":1,\"start\":\"%s\",\"end\":\"%s\"}", startDate, endDate)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-
-        // TODO verify на сервис
+        verify(bookingService).create(userId, bookingCreateDto);
     }
 
     @Test
@@ -142,6 +141,7 @@ class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status", is("APPROVED")));
+        verify(bookingService).approve(userId, bookingId, true);
     }
 
     @Test
@@ -153,6 +153,7 @@ class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status", is("WAITING")));
+        verify(bookingService).get(userId, bookingId);
     }
 
     @Test
